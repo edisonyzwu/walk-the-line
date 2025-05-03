@@ -212,4 +212,805 @@ section {
     font-size: 0.9rem;
   }
 
-  .ov
+  .overlay-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90vw;
+    max-width: 600px;
+    text-align: center;
+    z-index: 4;
+  }
+}
+
+p {
+  font-size: 16px;
+}
+
+.fast-fade {
+  transition: opacity 0.5s ease-out !important;
+}
+
+footer {
+  background-color: #090909df;
+  color: white;
+  padding: 3rem 10rem;
+  font-family: "Lato", sans-serif;
+  font-size: 16px;
+}
+
+.footer-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-top h4 {
+  margin: 0;
+}
+
+.back-to-top {
+  background-color: #f0a91d;
+  color: #001947;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.back-to-top:hover {
+  opacity: 0.8;
+}
+
+.text-content {
+  width: calc(40% - 15px);
+  flex-shrink: 1;
+}
+
+.image-content {
+  width: calc(60% - 15px);
+  flex-shrink: 0;
+}
+
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+  display: flex;
+  justify-content: flex-end;
+  z-index: 1000;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  cursor: default; /* Keep the default arrow cursor */
+}
+
+.sidebar-overlay.show {
+  visibility: visible;
+  opacity: 1;
+  cursor: default; /* Ensure the cursor remains as an arrow when visible */
+}
+
+.sidebar p {
+  font-size: 14px;
+  font-family: "lora", Georgia, "Times New Roman", Times, serif;
+}
+
+.sidebar {
+  background: white;
+  width: 400px;
+  max-width: 90%;
+  height: 100%;
+  overflow-y: auto;
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+  padding: 30px;
+  padding-bottom: 80px; /* Increased padding at the bottom */
+  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
+  font-family: "Libre Franklin", Arial, Helvetica, sans-serif;
+  position: relative;
+  cursor: default; /* Reset cursor to default for the sidebar content */
+  z-index: 1001; /* Higher than the overlay to ensure it's on top */
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+  scroll-padding-bottom: 100px; /* Ensures content isn't hidden behind the bottom edge when scrolling */
+}
+
+/* Responsive design for the sliding sidebar */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%; /* Full width on mobile */
+    max-width: 100%;
+    padding: 20px; /* Smaller padding on mobile */
+    padding-bottom: 70px; /* Increased padding at the bottom for mobile */
+  }
+
+  /* Adjust figcaption size on tablets */
+  .image-caption,
+  figcaption {
+    font-size: 13px;
+    padding: 6px 8px 0;
+    text-align: left;
+  }
+
+  .sidebar h2 {
+    font-size: 20px; /* Smaller heading on mobile */
+    padding-right: 40px; /* More space for the close button */
+  }
+
+  .sidebar p {
+    font-size: 15px; /* Slightly smaller text on mobile */
+  }
+
+  .sidebar-story-image {
+    margin: 0 -20px 15px; /* Adjust negative margin for smaller padding */
+    width: calc(100% + 40px); /* Adjust width calculation for smaller padding */
+    max-height: 400px; /* Slightly smaller max height on tablets */
+  }
+}
+
+/* Extra small devices */
+@media (max-width: 480px) {
+  .sidebar {
+    padding: 15px; /* Even smaller padding on very small screens */
+    padding-bottom: 60px; /* Increased padding at the bottom for very small screens */
+  }
+
+  /* Adjust figcaption size on mobile */
+  .image-caption,
+  figcaption {
+    font-size: 12px;
+    padding: 5px 5px 0;
+    line-height: 1.3;
+  }
+
+  .sidebar h2 {
+    font-size: 18px; /* Even smaller heading on very small screens */
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
+
+  .sidebar p {
+    font-size: 14px; /* Even smaller text on very small screens */
+    line-height: 1.5;
+  }
+
+  .sidebar-story-image {
+    margin: 0 -15px 15px; /* Adjust negative margin for smaller padding */
+    width: calc(100% + 30px); /* Adjust width calculation for smaller padding */
+    max-height: 300px; /* Smaller max height on mobile */
+  }
+
+  .close-sidebar {
+    top: 10px;
+    right: 10px;
+  }
+}
+
+.sidebar h2 {
+  font-size: 24px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  text-align: left;
+  padding-right: 30px;
+}
+
+.sidebar p {
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 15px;
+}
+
+/* Ensure the last paragraph has extra margin to be fully visible */
+.sidebar p:last-child {
+  margin-bottom: 20px; /* Increased margin for more space at the bottom */
+  padding-bottom: 10px; /* Additional padding */
+  position: relative; /* Enable positioning context */
+}
+
+/* Add a pseudo-element after the last paragraph for extra space */
+.sidebar p:last-child::after {
+  content: "";
+  display: block;
+  height: 10px; /* Height of the extra space */
+  width: 100%;
+  position: absolute;
+  bottom: -10px;
+}
+
+/* Styling for the image in the sidebar */
+.sidebar-story-image {
+  margin: 0 -30px 20px; /* Negative margin to stretch beyond the padding */
+  width: calc(100% + 60px); /* Compensate for the negative margins */
+  max-height: 500px; /* Set a reasonable max height */
+  overflow: hidden;
+  position: relative; /* For positioning the caption */
+}
+
+.sidebar-story-image img {
+  width: 100%;
+  height: auto; /* Use auto height to maintain aspect ratio */
+  object-fit: cover; /* Fill the container while maintaining aspect ratio */
+  object-position: center; /* Center the image within its container */
+  display: block; /* Remove any default inline spacing */
+}
+
+.full-width-image {
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  margin-bottom: 2rem;
+  margin-top: 2rem;
+  position: relative;
+  text-align: center; /* Center the image */
+}
+
+.full-width-image img {
+  width: 100%;
+  height: auto; /* Maintain aspect ratio */
+  max-height: none; /* Remove max-height constraint */
+  object-fit: cover; /* Fill the container while maintaining aspect ratio */
+  display: block;
+}
+
+.sidebar-overlay.show .sidebar {
+  transform: translateX(0);
+}
+
+/* Ensure the cursor remains as an arrow when clicking on the overlay */
+.sidebar-overlay:active {
+  cursor: default;
+}
+
+.close-sidebar {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 16px;
+  font-weight: light;
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: #f5f5f5;
+  transition: background-color 0.2s, transform 0.2s;
+  z-index: 1002; /* Ensure it's above all other sidebar content */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.close-sidebar:hover {
+  background-color: #e0e0e0;
+  transform: scale(1.1);
+}
+
+.close-sidebar:active {
+  transform: scale(0.95);
+}
+
+.hidden {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+.sidebar-card-wrapper {
+  /* border-top: 1px dashed #4b4949;
+  border-bottom: 1px dashed #4b4949; */
+  background: #dbdbdb; /* Light gray background like in the image */
+  width: 100vw; /* Full viewport width */
+  margin-left: calc(-50vw + 50%); /* Center the element regardless of parent container */
+  padding: 40px 0; /* Vertical padding only */
+  position: relative; /* For proper positioning */
+}
+
+.sidebar-card-content {
+  max-width: 800px; /* Content width remains limited */
+  margin: 0 auto; /* Center the content */
+  padding: 0 20px; /* Horizontal padding for the content */
+  font-family: "Libre Franklin", Arial, Helvetica, sans-serif;
+  box-sizing: border-box; /* Include padding in width calculation */
+}
+
+/* Story category text above the card */
+.sidebar-story-category {
+  text-align: center;
+  color: #666;
+  font-size: 12px;
+  margin-bottom: 15px;
+  font-weight: normal;
+  position: relative;
+  padding-bottom: 10px;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Add a shorter line under the category text */
+.sidebar-story-category:after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 320px; /* Shorter line as requested */
+  height: 1px;
+  background-color: #ccc;
+}
+
+.sidebar-title {
+  font-family: Helvetica, sans-serif;
+  font-size: 24px;
+  font-weight: border;
+  margin-bottom: 30px;
+  text-align: center;
+  color: #000;
+}
+
+/* Create a magazine-style layout with text and image side by side */
+.sidebar-card-row {
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+  align-items: stretch; /* Make all children stretch to match the tallest element */
+}
+
+.sidebar-content {
+  flex: 3; /* Takes up more space than the image */
+  text-align: left;
+  font-size: 16px;
+  line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Align content to the top */
+  padding-left: 20px; /* Add padding to maintain spacing from the edge */
+}
+
+.sidebar-image {
+  flex: 2; /* Takes up less space than the text */
+  display: flex;
+  align-items: center; /* Center the image vertically */
+  justify-content: flex-end; /* Align to the right edge */
+  position: relative; /* For absolute positioning of the image if needed */
+  overflow: hidden; /* Prevent image from overflowing */
+  margin-right: -20px; /* Negative margin to stretch beyond the right edge */
+  padding-left: 0; /* Remove any padding on the left */
+}
+
+/* Responsive design for sidebar card on smaller screens */
+@media (max-width: 768px) {
+  .sidebar-card-row {
+    flex-direction: column; /* Stack content and image vertically */
+    gap: 20px;
+  }
+
+  .sidebar-content {
+    padding-left: 0; /* Remove left padding on mobile */
+    order: 2; /* Move content below image on mobile */
+  }
+
+  .sidebar-image {
+    margin-right: 0; /* Remove negative margin on mobile */
+    margin: 0 -20px; /* Stretch image full width on mobile */
+    order: 1; /* Move image above content on mobile */
+  }
+
+  /* Responsive styles for Leo's sidebar story images */
+  .sidebar-story-content figure {
+    margin: 1rem 0 1.5rem 0;
+  }
+
+  .sidebar-story-content figure img {
+    max-height: 250px;
+  }
+
+  .sidebar-story-content figure figcaption {
+    margin-top: 6px;
+    font-size: 13px;
+  }
+
+  .sidebar-image img {
+    min-height: 200px; /* Slightly smaller minimum height on mobile */
+  }
+
+  .sidebar-story-category:after {
+    width: 150px; /* Even shorter line on mobile */
+  }
+
+  .sidebar-title {
+    font-size: 22px; /* Slightly smaller title on mobile */
+    margin-bottom: 20px;
+  }
+
+  /* Responsive styles for full-width-image on tablets */
+  .full-width-image figcaption {
+    padding-left: 2rem;
+    padding-right: 2rem;
+    font-style: italic;
+  }
+
+  /* Responsive styles for news app image on tablets */
+  figure.news-app-figure {
+    max-width: 1000px;
+  }
+
+  /* Responsive styles for card on tablets */
+  figure.card {
+    max-width: 600px;
+    gap: 12px;
+  }
+
+  figure.card img {
+    width: calc(50% - 6px); /* Two images side by side with smaller gap */
+  }
+}
+
+/* Extra small devices */
+@media (max-width: 480px) {
+  .sidebar-card-content {
+    padding: 0 15px; /* Smaller padding on very small screens */
+  }
+
+  .sidebar-image {
+    margin: 0 -15px; /* Adjust margins for smaller padding */
+  }
+
+  .sidebar-image img {
+    min-height: 180px; /* Even smaller minimum height on very small screens */
+  }
+
+  .sidebar-content {
+    font-size: 15px; /* Smaller text on very small screens */
+  }
+
+  .sidebar-title {
+    font-size: 20px; /* Even smaller title on very small screens */
+    margin-bottom: 15px;
+  }
+
+  .sidebar-story-category {
+    font-size: 13px; /* Smaller category text on very small screens */
+  }
+
+  .sidebar-story-category:after {
+    width: 120px; /* Even shorter line on very small screens */
+  }
+
+  /* Mobile styles for Leo's sidebar story images */
+  .sidebar-story-content figure {
+    max-height: 200px;
+  }
+
+  .sidebar-story-content figure img {
+    max-height: 200px;
+  }
+
+  /* Responsive styles for full-width-image on mobile */
+  .full-width-image {
+    margin-bottom: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .full-width-image figcaption {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    font-size: 13px;
+  }
+
+  /* Responsive styles for news app image on mobile */
+  figure.news-app-figure {
+    max-width: 350px;
+    margin: 1.5rem auto;
+  }
+
+  figure.news-app-figure figcaption {
+    font-size: 13px;
+    padding: 6px 5px 0;
+    text-align: left;
+  }
+
+  /* Responsive styles for card on mobile */
+  figure.card {
+    max-width: 100%;
+    margin: 1.5rem auto;
+    gap: 10px;
+  }
+
+  figure.card img {
+    width: 100%; /* Full width on mobile */
+    margin-bottom: 10px;
+  }
+
+  figure.card figcaption {
+    font-size: 13px;
+    padding: 6px 5px 0;
+    text-align: left;
+  }
+}
+
+.sidebar-image img {
+  width: 100%;
+  height: 90%;
+  object-fit: cover; /* Maintain aspect ratio while filling the container */
+  object-position: center; /* Center the image within its container */
+  border-radius: 0; /* Remove border radius for magazine style */
+  display: block; /* Remove any default inline spacing */
+  max-height: none; /* Allow the image to take full height */
+  min-height: 250px; /* Ensure minimum height matches the row */
+}
+
+.sidebar-button {
+  margin-top: 20px;
+  text-align: center; /* Center the button */
+  width: 100%; /* Make sure the container takes full width */
+}
+
+.open-sidebar {
+  background: rgb(238, 236, 236);
+  border: 2px solid black;
+  padding: 10px 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  display: inline-block; /* Allow the button to be centered */
+  min-width: 200px; /* Give the button a consistent width */
+  text-align: center; /* Center the text within the button */
+  font-family: "Libre Franklin", Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+}
+
+.open-sidebar:hover {
+  background: black;
+  color: white;
+}
+
+#chart {
+  margin: 25px auto;
+  width: 1000px;
+  position: relative;
+}
+
+#tooltip {
+  border: 1px solid #ccc;
+  position: absolute;
+  padding: 10px;
+  background-color: #fff;
+  display: none;
+  pointer-events: none;
+  text-align: center;
+}
+
+/* Responsive design for the button */
+@media (max-width: 768px) {
+  .open-sidebar {
+    min-width: 180px; /* Slightly smaller button on mobile */
+    font-size: 13px;
+    padding: 8px 15px;
+    width: 100%; /* Full width button on very small screens */
+    max-width: 250px;
+  }
+
+  .sidebar-button {
+    margin-top: 15px;
+  }
+}
+
+/* Special styling for Leo's sidebar story images */
+.sidebar-story-content figure {
+  margin: 1rem 0 2rem 0;
+  width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-story-content figure img {
+  width: 100%;
+  height: auto;
+  max-height: 300px;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.sidebar-story-content figure figcaption {
+  margin-top: 8px;
+  font-size: 14px;
+  color: #666;
+  font-style: italic;
+  line-height: 1.4;
+  width: 100%;
+  display: block;
+  word-wrap: break-word;
+}
+
+/* Style for the image caption */
+.image-caption,
+figcaption {
+  font-size: 14px;
+  color: #666;
+  text-align: left;
+  padding: 8px 10px 0;
+  line-height: 1.4;
+  font-style: italic;
+  display: block;
+  width: 100%;
+}
+
+/* Special styling for news app image */
+figure.news-app-figure {
+  max-width: 450px;
+  margin: 2rem auto;
+  display: block;
+}
+
+figure.news-app-figure img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+/* Card with multiple images in a row */
+figure.card {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  width: 100%;
+  max-width: 800px;
+  margin: 2rem auto;
+}
+
+figure.card img {
+  width: calc(50% - 10px); /* Two images side by side with gap */
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+figure.card figcaption {
+  width: 100%;
+  margin-top: 10px;
+  text-align: left;
+}
+
+/* Special styling for full-width-image figcaptions */
+.full-width-image figcaption {
+  text-align: left;
+  max-width: 600px;
+  margin: 0 auto;
+  padding-left: 3rem;
+  padding-right: 3rem;
+  font-style: normal;
+}
+
+/* Italic figcaption style */
+figcaption.italic {
+  font-style: italic !important;
+}
+
+/* Add a spacer at the bottom of the sidebar */
+.sidebar-spacer {
+  height: 50px; /* Height of the spacer */
+  width: 100%;
+  display: block;
+  clear: both;
+}
+
+/* Image row for displaying two images side by side */
+.image-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 15px;
+  width: 100%;
+  max-width: 1400px; /* Increased max-width for larger container */
+  margin: 2rem auto; /* Center the container */
+  text-align: center;
+}
+
+.image-row img {
+  width: calc(50% - 10px); /* Calculate width accounting for gap */
+  max-width: 800px; /* Increased max-width for larger images */
+  height: auto;
+  object-fit: contain;
+  display: inline-block;
+  vertical-align: middle; /* Align images vertically */
+}
+
+/* Single caption for the image row */
+.image-row figcaption {
+  margin: 0;
+  text-align: left;
+  width: 100%;
+  max-width: 1400px;
+  font-style: normal;
+  color: #666;
+  font-size: 15px;
+  padding-left: 0 !important; /* Remove left padding to align with edge */
+  flex-basis: 100%; /* Ensures caption takes full width on new line */
+  order: 3; /* Places caption after images */
+}
+
+/* Asymmetric image row for displaying two images with different widths */
+.asymmetric-image-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 15px;
+  width: 100%;
+  max-width: 100%; /* Full width container */
+  margin: 0 auto 1rem auto; /* Reduced margin */
+  text-align: center;
+}
+
+.asymmetric-image-row img.left-image {
+  width: calc(50% - 7.5px); /* Equal to right image minus half the gap */
+  max-width: none; /* Remove max-width constraint */
+  height: auto;
+  object-fit: contain;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.asymmetric-image-row img.right-image {
+  width: calc(50% - 7.5px); /* Equal to left image minus half the gap */
+  max-width: none; /* Remove max-width constraint */
+  height: auto;
+  object-fit: contain;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.asymmetric-image-row figcaption {
+  margin: 0.5rem 0 0 0;
+  text-align: left;
+  width: 100%;
+  max-width: 100%;
+  font-style: normal;
+  color: #666;
+  font-size: 15px;
+  padding-left: 0 !important;
+  flex-basis: 100%;
+  order: 3;
+}
+
+/* Responsive design for image row */
+@media (max-width: 768px) {
+  .image-row,
+  .asymmetric-image-row {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .image-row img,
+  .asymmetric-image-row img.left-image,
+  .asymmetric-image-row img.right-image {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 0;
+  }
+
+  .image-row figcaption,
+  .asymmetric-image-row figcaption {
+    margin-top: 10px;
+    font-size: 14px;
+    text-align: left;
+  }
+}

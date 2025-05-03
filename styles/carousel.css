@@ -119,4 +119,12 @@
 
 @media (max-width: 480px) {
   .carousel-item {
-    flex: 0 0 calc(100% - 10px); /* Show 1 image on mobile
+    flex: 0 0 calc(100% - 10px); /* Show 1 image on mobile */
+  }
+
+  .carousel-control {
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+  }
+}
