@@ -1,0 +1,24 @@
+/* Additional fixes for figcaption overlap issues */
+
+/* This targets the specific case shown in the screenshot */
+figure figcaption + p,
+figcaption + p,
+.image-caption + p {
+  margin-top: 35px; /* Add extra space after figcaption */
+  position: relative; /* Create a new stacking context */
+  z-index: 0; /* Ensure it's below the figcaption */
+  clear: both; /* Ensure it starts on a new line */
+}
+
+/* Ensure proper spacing between figcaption and following content */
+.sidebar-story-content p:first-of-type {
+  margin-top: 35px; /* Add extra space at the top of the first paragraph */
+  padding-top: 10px; /* Additional padding to prevent overlap */
+}
+
+/* Fix for the specific case in mapbox.html */
+.sidebar-story-image + .sidebar-story-content {
+  margin-top: 20px; /* Add space between the image container and content */
+  padding-top: 10px; /* Additional padding */
+  position: relative; /* Create a new stacking context */
+}

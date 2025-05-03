@@ -1,0 +1,45 @@
+body {
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+h1 {
+  font-size: 22px;
+}
+
+h2 {
+  font-size: 20px;
+}
+
+#chart {
+  margin: 25px auto;
+  width: 1000px;
+  position: relative;
+}
+
+#tooltip {
+  border: 1px solid #ccc;
+  position: absolute;
+  padding: 10px;
+  background-color: #fff;
+  display: none;
+  pointer-events: none;
+  text-align: center;
+}
+
+.price {
+  font-weight: bold;
+}
+
+.back {
+  width: 100%;
+  max-width: 650px;
+  font-family: "Inter", "Avenir", system-ui, -apple-system, Helvetica, Arial, sans-serif;
+  text-align: left;
+  color: rgb(61, 61, 61);
+}

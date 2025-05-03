@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Visa Trends Area Chart</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+      body {
+        font-family: sans-serif;
+        margin: 40px;
+      }
+      .axis path,
+      .axis line {
+        fill: none;
+        stroke: black;
+        shape-rendering: crispEdges;
+      }
+      .line {
+        fill: none;
+        stroke-width: 3px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>U.S. Nonimmigrant Visas Issued for Chinese Dropped since 2015</h2>
+    <h3>The number has been sustained low after pandemic.</h3>
+    <svg width="800" height="500"></svg>
+
+    <script>
+      const data = [
+        {year: 2013, visa: 1467563},
+        {year: 2014, visa: 1767596},
+        {year: 2015, visa: 2626584},
+        {year: 2016, visa: 2264412},
+        {year: 2017, visa: 1689893},
+        {year: 2018, visa: 1464810},
+        {year: 2019, visa: 1255992},
+        {year: 2020, visa: 316450},
+        {year: 2021, visa: 108646},
+        {year: 2022, visa: 161189},
+        {year: 2023, visa: 417008},
+      ];
+
+      const svg = d3.select("svg"),
+        margin = {top: 20, right: 30, bottom: 50, left: 60},
+        width = +svg.attr("width") - margin.left - margin.right,
+        height = +svg.attr("height") - margin.top - margin.bottom,
+        g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+
+      const x = d3
+        .scaleLinear()
+        .domain(d3.extent(data, (d) => d.year))
+        .range([0, width]);
+
+      const y = d3.scaleLinear().domain([0, 2.8e6]).range([height, 0]);
+
+      const line = d3
+        .line()
+        .x((d) => x(d.year))
+        .y((d) => y(d.visa))
+        .curve(d3.curveMonotoneX);
+
+      const area = d3
+        .area()
+        .x((d) => x(d.year))
+        .y0(height)
+        .y1((d) => y(d.visa))
+        .curve(d3.curveMonotoneX);
+
+      // X Axis
+      g.append("g")
+        .attr("transform", `translate(0,${height})`)
+        .call(d3.axisBottom(x).tickFormat(d3.format("d")));
+
+      // Y Axis with custom ticks
+      g.append("g").call(
+        d3
+          .axisLeft(y)
+          .tickValues([0, 5e5, 1e6, 1.5e6, 2e6, 2.5e6])
+          .tickFormat((d) => d / 1e6 + "M")
+      );
+
+      // Area Path
+      g.append("path").datum(data).attr("fill", "#FF8C00").attr("d", area);
+
+      // Line Path
+      const path = g
+        .append("path")
+        .datum(data)
+        .attr("fill", "none")
+        .attr("stroke", "black")
+        .attr("stroke-width", 3)
+        .attr("d", line);
+
+      // Animate the line
+      const totalLength = path.node().getTotalLength();
+
+      path
+        .attr("stroke-dasharray", totalLength + " " + totalLength)
+        .attr("stroke-dashoffset", totalLength)
+        .transition()
+        .duration(3000)
+        .ease(d3.easeCubic)
+        .attr("stroke-dashoffset", 0);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,46 @@
+#d3-container {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  overflow-x: auto;
+}
+
+.chart-title {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  text-align: left;
+}
+
+.chart-subtitle {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+.chart-source {
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+  text-align: left;
+}
+
+#chart {
+  margin: 25px auto;
+  width: 1000px;
+  position: relative;
+}
+
+#tooltip {
+  border: 1px solid #ccc;
+  position: absolute;
+  padding: 10px;
+  background-color: #fff;
+  display: none;
+  pointer-events: none;
+  text-align: center;
+}
+
+@media (max-width: 1020px) {
+  #d3-container {
+    padding: 0 10px;
+  }
+}

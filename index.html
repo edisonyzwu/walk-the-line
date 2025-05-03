@@ -1,12 +1,171 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8" />
+    <title>Slipping into America</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
     <link rel="stylesheet" href="styles/main.css" />
+    <link rel="stylesheet" href="styles/figcaption-fix.css" />
+    <link rel="stylesheet" href="styles/d3-container.css" />
+    <link rel="stylesheet" href="styles/text-image-layout.css" />
+    <link rel="stylesheet" href="styles/charts-container.css" />
+    <link rel="stylesheet" href="styles/charts-row.css" />
+    <link rel="stylesheet" href="styles/carousel.css" />
+    <link rel="icon" type="image/x-icon" href="assets/logo.jpg" />
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v3.8.0/mapbox-gl.js"></script>
+    <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v3.8.0/mapbox-gl.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/mapbox-gl-globe-minimap@1.2.0/dist/bundle.js"></script>
+    <script src="https://unpkg.com/scrollama"></script>
+    "
+    <style>
+      #scroll-container {
+        margin: 0;
+        padding: 0;
+        font-family: Roboto, Arial, sans-serif;
+      }
 
-    <title>Chinese Immigrants</title>
+      a,
+      a:hover,
+      a:visited {
+        color: #0071bc;
+      }
+
+      /* #map {
+        top: 0;
+        height: 100vh;
+        width: 100vw;
+        position: fixed;
+      } */
+
+      #scroll-container {
+        position: relative;
+      }
+
+      #map {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        width: 100%;
+        z-index: 0; /* 地图低一层，文字高一点 */
+      }
+
+      #header {
+        margin: auto;
+        width: 100%;
+        position: relative;
+        z-index: 5;
+      }
+
+      #header h1,
+      #header h2,
+      #header p {
+        margin: 0;
+        padding: 2vh 2vw;
+        text-align: center;
+      }
+
+      /* #footer {
+            width: 100%;
+            min-height: 5vh;
+            padding-top: 2vh;
+            padding-bottom: 2vh;
+            text-align: center;
+            line-height: 25px;
+            font-size: 13px;
+            position: relative;
+            z-index: 5;
+          } */
+
+      #features {
+        padding-top: 40vh;
+        padding-bottom: 10vh;
+      }
+
+      .hidden {
+        visibility: hidden;
+      }
+
+      .centered {
+        width: 50vw;
+        margin: 0 auto;
+      }
+
+      .lefty {
+        width: 33vw;
+        margin-left: 5vw;
+      }
+
+      .righty {
+        width: 33vw;
+        margin-left: 62vw;
+      }
+
+      .fully {
+        width: 100%;
+        margin: auto;
+      }
+
+      .light {
+        color: #444;
+        background-color: #fafafa;
+      }
+
+      .dark {
+        color: #fafafa;
+        background-color: #444;
+      }
+
+      .step {
+        padding-bottom: 50vh;
+        /* margin-bottom: 10vh; */
+        opacity: 0.25;
+      }
+
+      .step.active {
+        opacity: 0.99;
+      }
+
+      .step div {
+        padding: 20px 30px;
+        line-height: 25px;
+        font-size: 16px;
+        border-radius: 6px;
+      }
+
+      .step div strong {
+        font-weight: 800;
+      }
+
+      .step img {
+        width: 100%;
+        padding-top: 10px;
+      }
+
+      .step video {
+        width: 100%;
+        padding-top: 10px;
+        margin: 0;
+      }
+
+      @media (max-width: 750px) {
+        .centered,
+        .lefty,
+        .righty,
+        .fully {
+          width: 90vw;
+          margin: 0 auto;
+        }
+      }
+
+      /* Fix issue on mobile browser where scroll breaks  */
+      .mapboxgl-canvas-container.mapboxgl-touch-zoom-rotate.mapboxgl-touch-drag-pan,
+      .mapboxgl-canvas-container.mapboxgl-touch-zoom-rotate.mapboxgl-touch-drag-pan
+        .mapboxgl-canvas {
+        touch-action: unset;
+      }
+    </style>
   </head>
+
   <body>
     <div id="progress-container">
       <div id="progress-bar"></div>
@@ -18,17 +177,20 @@
 
     <main>
       <!-- hero -->
-      <div id="top">
-        <div id="scrolly">
-          <div class="sticky-graphic">
-            <img id="bg" src="assets/bg1.png" alt="background" />
-            <img id="char" src="assets/char1.png" alt="hero character" />
 
-            <div class="overlay-text">
-              <h1 class="headline">The Price of a Dream</h1>
+      <div class="hero">
+        <img id="bg" src="assets/hero-image.jpg" alt="background" />
+        <div class="hero-content"></div>
+      </div>
+      <div class="main-content">
+        <div class="story-body">
+          <section>
+            <div>
+              <h1 class="headline">Slipping into America</h1>
               <h2 class="deck">
-                From Middle-Class Lives in China to Low-Wage Labor in the U.S., “Walk-Line” Migrants
-                Question What Was Gained — and Lost.
+                Tens of thousands of Chinese have crossed the U.S.-Mexico border since the pandemic,
+                leaving behind middle-class lives in China for an American Dream that remains far
+                from reach under the second Trump administration.
               </h2>
               <p class="author">
                 By
@@ -37,27 +199,6 @@
                 <b>Edison Wu</b>
               </p>
             </div>
-          </div>
-
-          <div class="steps">
-            <div class="step" data-index="0"></div>
-            <div class="step" data-index="1"></div>
-            <div class="step" data-index="2"></div>
-            <div class="step" data-index="3"></div>
-            <div class="step" data-index="4"></div>
-          </div>
-        </div>
-      </div>
-      <article>
-        <div class="story-body">
-          <section
-            class="fade-box"
-            style="opacity: 0"
-            article
-            data-50-bottom-top="opacity:0.5; transform:scale(1.1);"
-            data-100-center-center="opacity:1; transform:scale(1);"
-            class="skrollable skrollable-between"
-          >
             <!-- <div style="height: 20vh"></div> -->
             <div class="lead">
               <p>
@@ -65,90 +206,2105 @@
                 t 5 a.m., Denvy Jiang’s alarm buzzes to life. Outside, the streets are still cloaked
                 in darkness. In the next room, his wife and two children remain fast asleep.
               </p>
+              <p>
+                Jiang rises quietly, careful not to wake his wife and two children or the four other
+                families in the shared house. He wolfs down a few bites of the breakfast his wife
+                set out the night before, grabs his car key and slips into his secondhand Honda.
+              </p>
 
               <p>
-                Jiang rises quietly, careful not to wake his family or the tenants behind the four
-                other doors in the crowded shared house. He wolfs down a few bites of the breakfast
-                his wife set out the night before, grabs his car keys and slips into his secondhand
-                Honda. Minutes later, he’s merging onto the highway, bound for a delivery warehouse
+                Minutes later, he’s merging onto the 88 highway, bound for a delivery warehouse
                 nearly 20 miles away.
               </p>
 
-              <p>It’s his 257th day in the United States.</p>
-
               <p>
-                Just over six months ago, Jiang and his wife left their jobs in Shanghai, China’s
-                largest city and a global financial hub, where they had spent more than a decade
-                working as private home tutors. Together, they earned more than 40,000 yuan a month
-                (about $5,600), enough to live comfortably in the city.
+                Six months ago, his life looked quite different. He lived in China with his wife,
+                where they owned their home and enjoyed a more comfortable life as private tutors —
+                a profession offering social respect and substantial earnings.
               </p>
 
               <p>
-                They sold their house and car, then brought their young son and daughter across the
-                Pacific. Under the cover of night, they crossed the U.S.-Mexico border, scaling a
-                barbed-wire fence and stepping into a country they had only seen in Hollywood
-                movies.
+                But Jiang had publicly questioned the government, putting him and his family at
+                risk.
               </p>
 
               <p>
-                Now, the family lives in Los Angeles. Each day, Jiang spends up to 14 hours on the
-                road, delivering nearly 200 packages.
+                They sold their home and car, traveled through Japan and then made their way to
+                Mexico. Under the cover of night, they crossed the U.S.–Mexico border with their
+                young son and daughter—entering a country they had never set foot in.
               </p>
 
               <p>
-                He is just one of tens of thousands of Chinese immigrants who, in the wake of the
-                pandemic, took the uncertain and costly route to the United States, hoping to plant
-                new roots in unfamiliar soil.
+                They have joined tens of thousands of Chinese immigrants who, in the wake of the
+                pandemic, took the costly route to the U.S. — leaving middle-class jobs and stable
+                lives behind, hoping to plant new roots in unfamiliar soil and escape political
+                repression and economic uncertainty.
               </p>
             </div>
-            <div class="nutgraph"></div>
+            <div class="nutgraph">
+              <p>
+                Before 2021, only a single-digit number of Chinese migrants crossed the U.S.–Mexico
+                border.
+              </p>
+
+              <p>
+                By 2023, that number had surged to over a thousand daily, peaking at nearly 6,000 in
+                December.
+              </p>
+
+              <p>
+                Since the pandemic, more than 60,000 Chinese nationals have crossed the border,
+                making China the fastest-growing source of undocumented migration.
+              </p>
+
+              <div id="d3-container">
+                <h3 class="chart-title">
+                  Largest Wave of Illegal Border Crossings by Chinese Immigrants Occurred After the
+                  Pandemic
+                </h3>
+                <p class="chart-subtitle">
+                  U.S. authorities have apprehended more than
+                  <strong>68,000</strong>
+                  Chinese migrants crossing illegally from Mexico since 2022
+                </p>
+                <div id="chart">
+                  <div id="tooltip">
+                    <div class="number"></div>
+                    <div class="date"></div>
+                  </div>
+                </div>
+                <p class="chart-source">
+                  Source:
+                  <a
+                    href="https://www.cbp.gov/document/stats/nationwide-encounters"
+                    style="color: rgb(61, 61, 61)"
+                  >
+                    U.S. Customs and Border Protection
+                  </a>
+                </p>
+              </div>
+
+              <p>
+                While many Latin American migrants flee war or poverty, many Chinese newcomers come
+                from China’s urban middle class, who were once teachers, business owners, and civil
+                servants.
+              </p>
+
+              <p>
+                In post-pandemic China, a slowing economy and growing political pressure pushed some
+                to look abroad. Online, they found step-by-step guides to reach the U.S.—a risky
+                journey through multiple countries that ends at the border and can cost $10,000 to
+                $40,000.
+              </p>
+
+              <p>
+                For those who make it across the border, their challenges just begin: low-wage jobs,
+                the threat of deportation, and the loneliness of life in a foreign land.
+              </p>
+            </div>
           </section>
           <section>
             <div class="china-part">
               <h2>Broken Middle-Class Dream</h2>
+              <p>
+                Jiang grew up in a small county town in Jiangsu province, near Shanghai. Ten years
+                ago, fresh out of vocational college, he became an English tutor.
+              </p>
+
+              <p>
+                For years, he and his wife commuted between Jiangsu and Shanghai — he taught
+                English, she taught math. They worked only on weekends and spent the rest of the
+                week at home with their children. During holidays, they often traveled abroad, with
+                Japan as a favorite destination.
+              </p>
+
+              <p>
+                In May 2018, after years of saving, they bought their first car: a new Chevrolet.
+                Later that year, they purchased a 1,400-square-foot, three-bedroom apartment in
+                their hometown—a place they could finally call home.
+              </p>
+
+              <p>To their friends, Jiang’s life looked stable and respectable, even enviable.</p>
+
+              <p>But he longed for one thing China forbade: freedom of expression.</p>
+
+              <p>
+                Since high school, Jiang had been bypassing China’s internet firewall to access
+                foreign news. He noticed that in the U.S., people can speak freely to criticize
+                authority and participate in politics.
+              </p>
+
+              <p>
+                Around 2015, when WeChat became widely used in China, Jiang said he launched a
+                public account and started publishing essays, pointing out what he saw as government
+                failures.
+              </p>
+
+              <p>
+                His most popular article criticizing the government drew more than 60,000 views, but
+                none of his friends showed support.
+              </p>
+
+              <p>
+                “People couldn’t understand why I’d challenge the government,” he said. “They
+                thought I was asking for trouble.”
+              </p>
+
+              <p>Still, Jiang believed it was his duty to speak up.</p>
+
+              <p>“Everyone wants their country to get better,” he said, tearing up.</p>
+
+              <p>Eventually, local authorities took notice.</p>
+
+              <p>
+                At first, the police took a relatively restrained approach. They asked Jiang to
+                delete his articles and warned him not to publish similar content again. But as the
+                warnings piled up, so did the pressure. The tone grew harsher, then came the
+                threats.
+              </p>
+
+              <p>
+                Jiang said the police didn’t just target him. They warned that if he was labeled a
+                political dissident, his children might be barred from school or later denied jobs
+                in the government.
+              </p>
+
+              <p>
+                Constantly worried about his family's safety and future, Jiang was eventually
+                diagnosed with major depression.
+              </p>
+
+              <p>
+                “I had a decent job in China,” he said, “but I couldn’t trade it for the right to
+                speak freely. I have a family. I have kids. If I get locked up for a few years, what
+                happens to them?”
+              </p>
+
+              <p>The final blow came during the pandemic.</p>
+
+              <p>
+                China’s zero-COVID policies had already made life difficult, but what alarmed Jiang
+                most was the government’s tight control of information. Even during major public
+                tragedies and protests, he noticed little to no coverage on domestic platforms. To
+                learn what was happening in his own country, he bypassed the firewall and turned to
+                Twitter and YouTube.
+              </p>
+
+              <p>Tired of living in the dark — he knew it was time to leave.</p>
+
+              <p>
+                For him, the decision was driven by a desire to escape political suppression.
+                Others, like Chao Chen, 44, were pushed by the economic fallout of the pandemic.
+              </p>
+
+              <p>
+                For more than two decades, he had run a small security equipment company in China,
+                managing a team of ten. He earned over one million yuan a year (roughly $140,000),
+                placing him well above the national average.
+              </p>
+
+              <p>Then the pandemic upended everything.</p>
+
+              <p>
+                China’s strict zero-COVID lockdowns triggered widespread job losses. In just the
+                first two months of 2020, five million positions vanished, and Tens of thousands of
+                private businesses collapsed. According to the corporate registry platform
+                Tianyancha, over 460,000 small and medium-sized enterprises were dissolved in early
+                2022 alone.
+              </p>
+
+              <p>
+                Chinese consumers have turned more cautious, citing concerns over wage growth and
+                job security as companies cut staff to preserve profits and competitiveness. The
+                country’s consumer confidence index fell to its lowest level since the COVID-19
+                outbreak and remains depressed.
+              </p>
+              <div class="charts-container">
+                <div class="chart-item">
+                  <img src="assets/GDP.png" alt="GDP change in China" />
+                  <p>After years of steady decline, China's GDP growth rate dropped to 2.3% in 2020</p>
+                </div>
+                <div class="chart-item">
+                  <img src="assets/consumer-confidence.png" alt="consumer confidency change in China" />
+                  <p>After years of strong confidence, Chinese people's willingness to spend collapsed during COVID</p>
+                </div>
+              </div>              <p>
+                Chen’s business began to falter. He found himself thinking back to his youth — his
+                early interest in English, his dreams of working in international trade, and maybe
+                one day going abroad.
+              </p>
+
+              <p>
+                To him, America represented higher wages, greater personal freedom, better
+                healthcare, and more opportunities for his son.
+              </p>
+
+              <p>
+                Chen planned to go first, alone, and try to build a foundation in the U.S. If it
+                worked, he would bring his wife and son later.
+              </p>
+
+              <p>
+                He never imagined that, twenty years later, he would pursue a long-abandoned dream,
+                even if it meant leaving behind those he loved most.
+              </p>
             </div>
           </section>
+        </div>
+
+        <div class="sidebar-card-wrapper">
+          <div class="sidebar-card-content">
+            <div class="sidebar-story-category">
+              Stories of the Collapsed Chinese Middle Class Dream
+            </div>
+            <h2 class="sidebar-title">When the Hospital Closed Its Doors</h2>
+            <div class="sidebar-card-row">
+              <div class="sidebar-content">
+                <p>
+                  Zhang, 32, owned an e-commerce livestreaming business in Hebei, northern China,
+                  while his wife stayed at home to care for their child.
+                </p>
+                <p>
+                  He hadn’t started out wealthy. Zhang began his career as a low-level employee at
+                  an e-commerce service company, earning just 5,000 yuan a month (around $690). Over
+                  the course of eight years, he gradually grew his income to 20,000 yuan and then to
+                  an annual salary of 300,000–500,000 yuan ($41,000 – $69,000).
+                </p>
+                <p>
+                  In 2021, after years of saving, Zhang and his wife bought a new 120-square-meter
+                  apartment. They were full of hope for the future. But then the pandemic hit — and
+                  everything changed. ...
+                </p>
+              </div>
+              <div class="sidebar-image">
+                <img src="assets/zhanjian.jpg" alt="Zhang and his wife" />
+              </div>
+            </div>
+            <div class="sidebar-button">
+              <button class="open-sidebar" onclick="openSidebar('hospital')">
+                Open Story on this Page
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="sidebar-overlay hidden"
+          data-story="hospital"
+          style="cursor: default"
+          onclick="if(event.target === this) { closeSidebar(); }"
+        >
+          <div class="sidebar" onclick="event.stopPropagation();">
+            <button class="close-sidebar" onclick="closeSidebar()">×</button>
+            <div class="sidebar-story-category">
+              Stories of the Collapsed Chinese Middle Class Dream
+            </div>
+            <h2 class="sidebar-title">When the Hospital Closed Its Doors</h2>
+            <figure class="sidebar-story-image">
+              <img src="assets/zhanjian.jpg" alt="Zhang and his wife" />
+              <figcaption
+                class="image-caption"
+                style="margin-bottom: 30px; padding-bottom: 10px; display: block; clear: both"
+              >
+                Zhang Jian and his wife sit at a family hostel in Rowland Heights, Los Angeles.
+              </figcaption>
+            </figure>
+            <div
+              class="sidebar-story-content"
+              style="margin-top: 40px; position: relative; z-index: 0"
+            >
+              <p>
+                Zhang, 32, owned an e-commerce livestreaming business in Hebei, northern China,
+                while his wife stayed at home to care for their child.
+              </p>
+              <p>
+                He hadn’t started out wealthy. Zhang began his career as a low-level employee at an
+                e-commerce service company, earning just 5,000 yuan a month (around $690). Over the
+                course of eight years, he gradually grew his income to 20,000 yuan and then to an
+                annual salary of 300,000–500,000 yuan ($41,000 – 69,000).
+              </p>
+              <p>
+                In 2021, after years of saving, Zhang and his wife bought a new 120-square-meter
+                apartment. They were full of hope for the future. But then the pandemic hit — and
+                everything changed.
+              </p>
+              <p>
+                Zhang’s first impressions of America had taken root more than a decade earlier. In
+                his early twenties, he was a regular viewer of Xiaoshuo (“Talks With Gao Xiaosong”),
+                a hugely popular Chinese talk show. On the show, Gao spoke casually but insightfully
+                about Western institutions, history, and how Americans enjoyed political freedoms,
+                legal rights, and the dignity of choice. Zhang came to see the U.S. as “a beacon of
+                democracy,” where anyone could live a decent life through hard work. That idea stuck
+                with him for years. It took a crisis to bring it to the surface.
+              </p>
+              <p>
+                In late 2020, at the height of COVID-19, Zhang’s infant daughter began showing
+                strange eye movements, a persistent twitch. She had been born prematurely and had
+                already survived two serious lung infections. Concerned about her fragile health,
+                Zhang feared the worst.
+              </p>
+              <p>
+                He and his wife rushed to Beijing Children’s Hospital, hoping to see a neurologist.
+                But before they could even explain, the doctor asked for their travel history via
+                China’s mandatory COVID “health code” app, which tracked users’ movements and
+                exposure risks.
+              </p>
+              <p>
+                When he saw that their registered household was in Shijiazhuang, a city with active
+                COVID cases, the doctor refused to see them. He called security and had the family
+                escorted out of the clinic.
+              </p>
+              <p>“Get out,” he said. “We don’t accept patients from there.”</p>
+              <p>
+                Zhang pleaded. , explaining that he didn’t live in Shijiazhuang, that he was only
+                registered there, and offeredoffering to keep the visit off the official record so
+                the doctor wouldn’t face liability. But none of it worked. All he wanted was a
+                verbal confirmation: that his child wasn’t having seizures, but this reassurance
+                never came.
+              </p>
+              <p>
+                “There was no compassion,” Zhang said. “He wasn’t acting like a doctor. He was just
+                protecting his job.”
+              </p>
+              <p>
+                During the COVID-19 lockdown, Zhang also had started watching Chinese-language
+                YouTube channels hosted overseas, particularly those that analyzed China’s economy
+                using official data.
+              </p>
+              <p>
+                “The more I watched, the more scared I got,” Zhang said. “Sometimes, I’d wake up at
+                night soaked in sweat.”
+              </p>
+              <p>
+                Between the anxiety over his child’s health and the bleak economic forecasts,
+                Zhang’s faith in the future began to collapse. He decided he couldn’t wait any
+                longer.
+              </p>
+              <p>
+                To leave China, Zhang sold an old apartment and his BMW X5. The new home had just
+                been renovated, with over 100,000 yuan poured into it. Letting it go felt too hard,
+                so they kept it, partly for comfort, partly as a backup plan.
+              </p>
+              <p>He moved his assets into a Hong Kong bank account.</p>
+              <p>
+                “I wasn’t afraid of being poor,” he said. “I was afraid that when I wanted to leave,
+                I’d be trapped.”
+              </p>
+              <p>
+                Zhang didn’t hesitate. The only painful part was leaving his father who had been
+                diagnosed with multiple system atrophy, a rare neurodegenerative disease with no
+                known cure.
+              </p>
+              <p>Doctors gave him only a few years to live.</p>
+              <p>“I may never see him again,” Zhang said. “But he supported my decision.”</p>
+              <p>
+                With his father’s blessing, Zhang boarded a plane with his wife and daughter, and
+                left everything else behind.
+              </p>
+            </div>
+            <div class="sidebar-spacer"></div>
+          </div>
+        </div>
+
+        <div class="story-body">
           <section>
             <div class="immigration-part">
-              <h2>Walk the Line</h2>
+              <h2>Journey to the US</h2>
+              <p>
+                For some, entry to the U.S. was relatively easy, requiring nothing more than a
+                tourist visa.
+              </p>
+
+              <p>
+                But since the 2015 fiscal year, the number of non-immigrant visas issued to Chinese
+                nationals has dropped sharply.
+              </p>
+
+              <p>As access shrank, new — and sometimes dangerous — pathways emerged.</p>
+
+              <p>
+                Jiang and his family, who had multiple entries to Japan on record, were eligible to
+                enter Mexico visa-free. From there, they traveled to the border city of Tijuana,
+                then crossed into the U.S.
+              </p>
+
+              <p>
+                Others were not so lucky. Without visa exemptions, many Chinese migrants were forced
+                to take longer, more dangerous, and far more expensive journeys.
+              </p>
             </div>
           </section>
-          <section>
-            <div class="us-part">
+        </div>
+
+        <div id="scroll-container">
+          <div id="map"></div>
+          <div id="story"></div>
+        </div>
+
+        <div class="story-body">
+            <div class="immigration-part">
+              <p>
+                Some tried to schedule asylum appointments through the U.S. Customs and Border
+                Protection mobile app, CBP One. But the app had no Chinese-language interface and
+                its opaque scheduling system left many confused and frustrated. For some, waiting
+                wasn't an option. They chose instead to scale the border wall at night and apply for
+                asylum afterward.
+              </p>
+              <div class="text-image-layout">
+                <div class="text-content">
+                  <p>
+                    Once they reached the U.S., migrants were immediately detained by immigration
+                    authorities — some held for a single day, others for weeks or even months.
+                  </p>
+
+                  <p>
+                    Their asylum cases can take years to process, and during that time, they are not
+                    permitted to leave the country.
+                  </p>
+                </div>
+                <div class="image-content">
+                  <img src="assets/process-chart.png" alt="Asylum application process chart" />
+                </div>
+              </div>
+            </div>           
+          <div>
+            <section class="us-part">
               <h2>American Dream from the Bottom</h2>
-            </div>
+              <p>
+                Two months after arriving in the U.S., the country he believes offers him freedom of
+                speech, Jiang earned his driver’s license and landed his first job — a package
+                delivery driver.
+              </p>
+
+              <p>
+                Paid $1.80 to $2.00 per package, his earnings depended on how many deliveries he
+                could make each day.
+              </p>
+
+              <p>
+                Though Jiang knew that he had to “start from the ground up” in the U.S., reality was
+                still harsher than he had imagined, he said.
+              </p>
+
+              <p>
+                While he had worked just three days a week with little physical effort back in
+                China, now, he is on the road six days a week, working ten hours or more each day
+                with barely any time to rest.
+              </p>
+       
+
+              <figure class="full-width-image">
+                <img
+                  src="assets/Jiang-out-for-work.jpg"
+                  alt="Jiang sets out for work before dawn"
+                />
+                <figcaption class="italic">Jiang sets out for work before dawn.</figcaption>
+              </figure>
+
+        
+              <p>
+                Before the sun rose, Jiang was already en route to his first stop: the warehouse.
+              </p>
+
+              <p>
+                In the warehouse, dozens of tall metal carts packed with grey plastic-wrapped
+                parcels were already lined up in rows.
+              </p>
+
+              <p>Jiang said he usually delivered between 150 and 180 packages a day.</p>
+
+              <figure class="image-row">
+                <img
+                  src="assets/warehouse-0.jpg"
+                  alt="Packages await sorting and delivery inside a warehouse in Los Angeles"
+                  class="side-by-side-image"
+                />
+                <img
+                  src="assets/warehouse-1.jpg"
+                  alt="Packages await sorting and delivery inside a warehouse in Los Angeles"
+                  class="side-by-side-image"
+                />
+                <figcaption class="italic">
+                  Packages await sorting and delivery inside a warehouse in Los Angeles.
+                </figcaption>
+              </figure>
+
+              <p>
+                He located the cart marked with his route number and strained to push it toward his
+                car’s trunk. Each package was scanned into his phone’s dispatch system and assigned
+                a route code.
+              </p>
+
+              <p>Over time, the routine became second nature: scan, tag, sort, load.</p>
+
+              <p>
+                Box after box filled the back of the car. Soon, the passenger seat and rear seats
+                were piled high with parcels. Only the driver’s seat remained clear.
+              </p>
+
+              <p>After nearly six months on the job, he had run every route three or four times.</p>
+
+              <p>
+                He knew which intersections always backed up, which buildings had broken buzzers,
+                and which doorways hid aggressive dogs.
+              </p>
+
+              <p>
+                By 7:30 a.m., Jiang entered the address for his first delivery into the GPS and
+                began his route.
+              </p>
+
+              <p>
+                At the stop, he rummaged through the back of the car to find the correct package,
+                scanned it, double-checked the address, and stepped out. He glanced around for the
+                correct unit number, jogged to the front porch, gently placed the parcel by the
+                door, snapped a photo for proof of delivery, and then jogged back to the car. With
+                one hand on the seatbelt, he punched in the next address as the engine revved again.
+              </p>
+
+              <p>
+                The entire process took less than three minutes, but he had to repeat it over a
+                hundred times a day.
+              </p>
+
+              <figure class="asymmetric-image-row">
+                <img
+                  src="assets/Jiang-car-package-0.jpg"
+                  alt="Jiang in the car with packages"
+                  class="left-image"
+                />
+                <img
+                  src="assets/Jiang-car-package-1.jpg"
+                  alt="Packages in the trunk of Jiang's car"
+                  class="right-image"
+                />
+              </figure>
+
+              <!-- Photo Carousel -->
+              <div class="photo-carousel-container">
+                <div class="photo-carousel">
+                  <div class="carousel-inner">
+                    <!-- Images will be loaded here by JavaScript -->
+                  </div>
+                  <button class="carousel-control prev" aria-label="Previous photos">&lt;</button>
+                  <button class="carousel-control next" aria-label="Next photos">&gt;</button>
+                </div>
+                <figcaption class="carousel-caption">
+                  A typical day of Jiang — loading, driving, and delivering across Los Angeles
+                </figcaption>
+              </div>
+
+              <p>
+                During deliveries, Jiang often wore a furrowed brow and tight lips, like a sprinter
+                at the starting line, every second counting toward the final result.
+              </p>
+
+              <p>
+                By noon, his shirt was drenched in sweat. He’d jump back into the car and crank the
+                A/C, but could afford to cool down for only a minute or two before his next stop.
+              </p>
+
+              <p>
+                In the beginning, he packed a lunch from home. But as the pace of the job picked up,
+                even that small comfort slipped away. Now, he eats while driving, grabbing some
+                bread rolls or a few crackers with one hand between stops.
+              </p>
+
+              <p>
+                Misunderstandings sometimes made Jiang’s work harder — once, a resident shouted and
+                blocked his way as he tried to enter a secured building. Yet small acts of kindness
+                eased the isolation: security guards began nodding in recognition, and residents
+                occasionally helped him find the right door, offering fleeting warmth in an
+                unfamiliar world.
+              </p>
+
+              <p>
+                Most nights, he didn’t return until after dark, sometimes not until nine or ten. His
+                wife waited up for him. The two kids were already asleep on a mattress in the corner
+                of the shared apartment. Jiang sat in the kitchen, eating the day’s only hot meal.
+              </p>
+
+              <p>Back in China, Jiang had a degree, a stable job, and professional respect.</p>
+
+              <p>Here, all of that was erased.</p>
+          
           </section>
+
+          <div class="sidebar-card-wrapper">
+            <div class="sidebar-card-content">
+              <div class="sidebar-story-category">
+                Stories of the Collapsed Chinese Middle Class Dream
+              </div>
+              <h2 class="sidebar-title">From Manager to Noodle Shop Worker</h2>
+              <div class="sidebar-card-row">
+                <div class="sidebar-content">
+                  <p>
+                    Before crossing the border, Leo was a mid-level manager at a state-owned
+                    enterprise in Shenzhen. He earned 50,000 yuan a month (around $7,000), had his
+                    own office, generous benefits, and a clear promotion path. To most people, he
+                    had a job for life.
+                  </p>
+                  <p>However, Leo felt he was slowly suffocating.</p>
+                  <p>
+                    Over two years at the SOE, he had frequent contact with private contractors.
+                    Hoping to secure deals, many of them offered small gifts as a way to build
+                    relationships. What began as informal gestures and networking gradually turned
+                    into open corruption, with bribes and kickbacks exchanged without pretense.
+                    Inside the company, things weren’t much better. ...
+                  </p>
+                </div>
+                <div class="sidebar-image">
+                  <img src="assets/leo-back.jpg" alt="Leo working at noodle shop" />
+                </div>
+              </div>
+              <div class="sidebar-button">
+                <button class="open-sidebar" onclick="openSidebar('noodle')">
+                  Open Story on this Page
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="sidebar-overlay hidden"
+            data-story="noodle"
+            style="cursor: default"
+            onclick="if(event.target === this) { closeSidebar(); }"
+          >
+            <div class="sidebar" onclick="event.stopPropagation();">
+              <button class="close-sidebar" onclick="closeSidebar()">×</button>
+              <div class="sidebar-story-category">
+                Stories of the Collapsed Chinese Middle Class Dream
+              </div>
+              <h2 class="sidebar-title">From Manager to Noodle Shop Worker</h2>
+              <figure class="sidebar-story-image">
+                <img src="assets/leo-back.jpg" alt="Leo working at noodle shop" />
+                <figcaption
+                  class="image-caption"
+                  style="margin-bottom: 30px; padding-bottom: 10px; display: block; clear: both"
+                >
+                  Leo works at a noodle shop in Monterey Park, Los Angeles.
+                </figcaption>
+              </figure>
+              <div
+                class="sidebar-story-content"
+                style="margin-top: 20px; position: relative; z-index: 0"
+              >
+                <p>For Leo, the decision to leave China had more to do with the system itself.</p>
+
+                <p>
+                  Before crossing the border, Leo was a mid-level manager at a state-owned
+                  enterprise (SOE) in Shenzhen. He earned 50,000 yuan a month (around $7,000), had
+                  his own office, generous benefits, and a clear promotion path. To most people, he
+                  had a job for life.
+                </p>
+
+                <p>However, Leo felt he was slowly suffocating.</p>
+
+                <p>
+                  Over two years at the SOE, he had frequent contact with private contractors.
+                  Hoping to secure deals, many of them offered small gifts as a way to build
+                  relationships. What began as informal gestures and networking gradually turned
+                  into open corruption, with bribes and kickbacks exchanged without pretense. Inside
+                  the company, things weren’t much better. Employees were expected to work overtime,
+                  and managers routinely berated subordinates in front of their peers.
+                </p>
+
+                <p>Leo saw no way to change it.</p>
+
+                <p>
+                  To cope, he began climbing China’s digital firewall to read foreign news. What he
+                  found shocked him—accounts of political events that were censored at home: the
+                  Tiananmen crackdown, the 2022 “white paper” protests, and more.
+                </p>
+
+                <p>“It opened my brain,” he said. “I realized what China really was.”</p>
+
+                <p>
+                  In late 2023, Leo quit his job. He packed a backpack and set off to “see the
+                  world.” His journey took him through Europe, Egypt, and Mexico—before finally
+                  reaching the United States.
+                </p>
+
+                <p>
+                  Like many newly arrived Chinese migrants, when first landing in the U.S., Leo
+                  headed straight to Monterey Park, a city east of downtown Los Angeles.
+                </p>
+
+                <figure>
+                  <img src="assets/monterey-park.png" alt="Map of Monterey Park" />
+                  <figcaption>
+                    A map showing the location of Monterey Park to downtown Los Angeles
+                  </figcaption>
+                </figure>
+
+                <p>
+                  Monterey Park holds a unique place in U.S. history: It was the first city where
+                  Asian Americans became the majority population. According to ACS 2023 data, 64% of
+                  residents in Monterey Park are Asian, more than double the rate in California.
+                </p>
+
+                <p>
+                  Street signs are bilingual, storefronts are covered in simplified Chinese
+                  characters. Mandarin, Cantonese, and Hokkien echo through the air, with English
+                  heard only occasionally.
+                </p>
+
+                <figure>
+                  <img src="assets/fatty-ding-plaza.jpg" alt="Stores in Fatty Ding Plaza" />
+                  <figcaption>
+                    Stores with Chinese-language signs in Fatty Ding Plaza, a shopping center
+                    serving the local Chinese community in Monterey Park
+                  </figcaption>
+                </figure>
+                <p>
+                  For Leo, Monterey Park wasn’t just a temporary refuge. It was a transitional space
+                  between two worlds. It was America, but also a different version of China.
+                </p>
+
+                <p>
+                  Though he lived in a place that felt familiar, Leo didn’t feel at home. The early
+                  months in the U.S., he said, were the darkest period of his life.
+                </p>
+
+                <p>
+                  Within two weeks of landing in the U.S., Leo’s 5-year long-term relationship
+                  ended. His family urged him to return. Old colleagues drifted away.
+                </p>
+
+                <p>
+                  Each morning, he woke to a rising wave of emptiness. On the worst days, he would
+                  lie in bed crying for an hour before he could bring himself to stand.
+                </p>
+
+                <p>
+                  To cope, he began taking sleeping pills. For a time, Leo couldn’t even bring
+                  himself to look for work. He lived off his savings, unable to move forward.
+                </p>
+
+                <p>He wasn’t alone.</p>
+
+                <p>
+                  At the time, he was staying with a fellow new immigrant whom he had met online.
+                  That friend confided that he, too, had spiraled into depression, plagued by
+                  homesickness and isolation. The man had seriously considered returning to China,
+                  but ultimately said: “I’ve come this far. I have to hold on.”
+                </p>
+
+                <p>Nearly three months passed like this—adrift, unemployed, and alone.</p>
+
+                <p>
+                  One day, Leo walked into a popular noodle shop tucked in Monterey Park. As it
+                  happened, they were short-staffed. Leo then landed his first job in the U.S.
+                </p>
+
+                <p>
+                  He stood behind the cashier counter, slightly hunched, dark circles under his
+                  eyes, stubble dusting his chin. His hands folded neatly in front of him, smiling
+                  politely at each customer who walked in.
+                </p>
+
+                <p>
+                  Once a deputy manager at a state-owned enterprise in Shenzhen, earning over 50,000
+                  yuan a month, he now served steaming bowls of hand-pulled noodles to strangers.
+                </p>
+
+                <figure>
+                  <img
+                    src="assets/leo-cleaning.jpg"
+                    alt="Leo cleans tables at a noodle shop where he works"
+                  />
+                  <figcaption>Leo cleans tables at a noodle shop where he works</figcaption>
+                </figure>
+
+                <p>
+                  When he wasn’t working, Leo chose to spend most of his time alone. Sometimes,
+                  while grocery shopping, he couldn’t help but think of the time he’d spent with his
+                  ex-girlfriend, his family, and his friends.
+                </p>
+
+                <p>
+                  He knew those days were gone. Though he had made some new friends, everyone was
+                  focused on survival.
+                </p>
+
+                <p>
+                  “Back home, when something went wrong, I had family and friends to lean on. Now, I
+                  face everything alone.”
+                </p>
+              </div>
+              <div class="sidebar-spacer"></div>
+            </div>
+          </div>
+        </div>
+
+          <div class="story-body">
           <section>
             <div class="deportation-part">
               <h2>Shadow of Deportation</h2>
+              <p>
+                Rebuilding a life in a foreign land is never easy. For undocumented immigrants, the
+                constant threat of deportation makes it even harder.
+              </p>
+
+              <p>
+                After returning to the White House, Donald Trump announced what he called “the
+                largest deportation operation in U.S. history,” pledging to remove millions of
+                undocumented immigrants within his first year back in office.
+              </p>
+
+              <p>
+                Reports of Immigration and Customs Enforcement (ICE) raids began surfacing across
+                the country, including some cases involving people with valid visas.
+              </p>
+
+              <p>
+                According to the Department of Homeland Security, more than 32,000 undocumented
+                immigrants were arrested by ICE within the first 50 days of Trump’s return to
+                office.
+              </p>
+
+              <p>
+                In his spare time, Leo often browsed the LA Chinese News app. Stories or rumors of
+                ICE activity appeared almost daily. The anxiety wore on him.
+              </p>
+
+              <figure class="news-app-figure">
+                <img src="assets/news-app.jpg" alt="Screenshot of LA Chinese News app" />
+                <figcaption class="image-caption">
+                  News of ICE detaining undocumented immigrants appears on Leo’s Chinese-language
+                  news app.
+                </figcaption>
+              </figure>
+
+              <p>
+                He even hesitated to buy a car, fearing that if he were suddenly deported, there
+                would be no way to deal with the property he left behind.
+              </p>
+
+              <p>
+                Leo said the number of new Chinese migrants had clearly declined this year. Regular
+                customers who used to frequent the noodle shop had dropped by a third. The
+                restaurant’s revenue plummeted. Staff were cut by a quarter. His monthly income
+                shrank from $6,000 to $4,000.
+              </p>
+
+              <p>
+                At the entrance to the Fatty Ding Plaza, a Cantonese restaurant called ABC Cafe,
+                open for 38 years, saw the same trend. The owner, Mr. Huang, said the place had long
+                served immigrants who had just arrived in the U.S., but that clientele had all but
+                vanished.
+              </p>
+
+              <p>Business dropped by 10%.</p>
+
+              <p>
+                In Monterey Park, some lawyers and NGOs distribute guides for immigrants on how to
+                protect their legal rights if confronted by ICE.
+              </p>
+
+              <figure class="card">
+                <img src="assets/card.jpg" alt="Screenshot of LA Chinese News app" />
+                <img
+                  src="assets/card-translate.png"
+                  alt="Trasnlation of the Screenshot of LA Chinese News app"
+                />
+                <figcaption class="image-caption">
+                  A card distributed by lawyers and NGOs to help immigrants assert their rights during encounters with ICE.
+                </figcaption>
+              </figure>
+
+              <p>
+                Despite the unsettling rumors, Jiang said he was not overly concerned. His lawyer
+                told him that the highest-risk individuals were those with final removal orders or
+                past convictions and as someone still in the asylum system, Jiang was unlikely to be
+                targeted. He added that he believes in the U.S. legal system, even amid Trump’s
+                immigration crackdown and shifting policies.
+              </p>
             </div>
           </section>
           <section>
             <div class="future-part">
               <h2>Uncertain Future</h2>
+              <p>February marked Leo’s first Lunar New Year in America.</p>
+
+              <p>
+                For millions of Chinese people, the Spring Festival is the most joyous time of the
+                year. It is a time for family reunions, long dinners, and crowded living rooms.
+              </p>
+
+              <p>But for Leo, it was just another day.</p>
+
+              <p>
+                There were no relatives to visit, no feast to prepare. He ate a simple meal with a
+                few coworkers in the restaurant where he worked.
+              </p>
+
+              <p>
+                Unsettling immigration policy and repetitive work at the noodle shop made Leo
+                couldn’t see a clear future.
+              </p>
+
+              <p>
+                When asked whether he regretted leaving behind a stable job, a secure life, and
+                financial comfort in China, Leo fell silent.
+              </p>
+
+              <p>After a long pause, he sighed:</p>
+
+              <p>“At this stage? It doesn’t feel worth it. I gave up too much.”</p>
+
+              <p>
+                And yet, Leo said he was content. He got along well with his coworkers and his boss.
+                Here, he didn’t have to flatter superiors or navigate office politics and
+                corruption. The simplicity lightened something inside him.
+              </p>
+
+              <p>
+                “This is just a transition,” he said. “Once I come out of the depression, I know I
+                can do more. I believe in myself. And I believe in this country.”
+              </p>
+
+              <p>
+                Now and then, he allowed himself small pleasures. He loved electronic music
+                festivals, something he had rarely experienced in China. Since moving to Los
+                Angeles, he had already attended two. He described the energy, the openness, the
+                crowd.
+              </p>
+
+              <p>“One day,” he said, “my future self will thank me for what I’m doing now.”</p>
+
+              <p>Since arriving in the U.S., Leo’s version of the American dream wasn’t grand.</p>
+
+              <p>
+                “I just want to live a little more comfortably,” he said. “To save a bit, maybe
+                travel now and then. One day, if I’m lucky, buy a home and settle down.”
+              </p>
+
+              <p>Meanwhile, Jiang and his family were also learning to adapt.</p>
+
+              <p>
+                His delivery job had little in the way of prospects. Still, he decided to stick with
+                it. He didn’t dwell on what might come next. For now, making ends meet was enough.
+              </p>
+
+              <p>
+                What mattered most wasn’t money or comfort, but setting an example for his children,
+                showing them that life wasn’t just about taking, it was also about contributing.
+              </p>
+
+              <p>
+                To Jiang, giving was as important as receiving. He had one day off per week. Instead
+                of resting, he volunteered at a food bank in Montebello, handing out free meals to
+                families in need.
+              </p>
+
+              <p>
+                In his eyes, the American dream was already half-fulfilled once he landed in this
+                new country.
+              </p>
+
+              <p>“Becoming an American is my ultimate goal,” he said, without hesitation.</p>
+
+              <figure class="full-width-image">
+                <img
+                  src="assets/Jiang-us-flag-0.jpg"
+                  alt="While making deliveries, Jiang pauses outside a home flying the American flag"
+                />
+                <figcaption>
+                  While making deliveries, Jiang pauses outside a home flying the American flag.
+                </figcaption>
+              </figure>
+
+              <p>
+                Near midnight, after a long day, Jiang washed up and slipped into bed. This is the
+                only moment of the day that truly belongs to him. In the darkness, the last thing he
+                did was set his alarm for 5 a.m. the next morning.
+              </p>
+
+              <p>
+                Meanwhile, Leo turned off the lights at the noodle shop and caught the No. 70 bus
+                back to the room he shared with others. Zhang was still hustling through the streets
+                of Hollywood, delivering late-night orders. Chen returned to his company, lay down
+                on a folding bed, and began mapping out the next day’s delivery routes.
+              </p>
+
+              <p>The city was quiet.</p>
+
+              <p>In a few hours, as the sun rose again, they would all be back on the road.</p>
             </div>
           </section>
-        </div>
-      </article>
+          </div>
+        
     </main>
     <footer>
       <div class="footer-top">
         <h4><strong>About</strong></h4>
-        <!-- <button class="back-to-top">Back to Top</button> -->
+        <button class="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'});">
+          Back to Top
+        </button>
       </div>
       <p>
-        <i>The Price of a Dream</i>
+        <i>Slipping into America</i>
         &nbsp;is a thesis project produced by Iris Qiu and Edison Wu at the UC Berkeley Graduate
         School of Journalism.
       </p>
     </footer>
+    <!-- <script src="./config.js"></script> -->
+    <script src="scripts/d3.js"></script>
+    <script src="scripts/carousel.js"></script>
+    <script src="scripts/progress-bar.js"></script>
+    <script>
+      let config = {
+        style: "mapbox://styles/mapbox/dark-v11",
+        // leave commented to use Mapbox Standard Style
+        accessToken:
+          "pk.eyJ1IjoiZWRpc29uLXd1IiwiYSI6ImNtMmh6MHE1aDBpOW8ybXByOWQ4OXFqMjQifQ.CCubqrI6NiN0S6M54r-vIg", // your mapbox gl access token.
+        showMarkers: true,
+        markerColor: "#FF9B00",
+        //   projection: "equirectangular",
+        //Read more about available projections here
+        //https://docs.mapbox.com/mapbox-gl-js/example/projections/
+        inset: true, // setting this to true will display markers and the panel on a second map (main map can't have markers or a panel)
+        insetOptions: {
+          markerColor: "orange",
+        },
+        insetPosition: "bottom-right",
+        theme: "dark",
+        use3dTerrain: true, //set true for enabling 3D maps.
+        auto: false,
+        //   title: "Walk the Line",
+        //   subtitle: "The Map Scrollytelling for Thesis Part 2",
+        //   byline: "By Edison",
+        //   footer:
+        //     'Source: source citations, etc. <br> Created using <a href="https://github.com/mapbox/storytelling" target="_blank">Mapbox Storytelling</a> template.',
+        chapters: [
+          {
+            id: "step-1",
+            alignment: "left",
+            hidden: false,
+            showMarkers: false,
+            //   title: "China",
+            //   image: "./assets/san-fran.jpeg",
+            description:
+              "The trip often started with a one-way flight across the Pacific from <strong>China</strong> to <strong>Ecuador</strong> — one of the few countries that allowed Chinese passport holders to enter <strong>without a visa</strong>. (That policy was later rescinded in July 2024).",
+            location: {
+              center: [121.4737, 31.2304],
+              zoom: 2,
+              pitch: 0, // pitch in degrees
+              bearing: 0, // bearing in degrees
+            },
+            mapAnimation: "flyTo",
+            rotateAnimation: false,
+            callback: "",
+            onChapterEnter: [
+              {
+                layer: "flight-path",
+                opacity: 0,
+                duration: 300,
+              },
+            ],
+            onChapterExit: [
+              {
+                layer: "flight-path",
+                opacity: 1,
+                duration: 1000,
+              },
+            ],
+          },
+          {
+            id: "step-2",
+            alignment: "left",
+            hidden: false,
+            showMarkers: true,
+            description:
+              "After landing in <span style='color: orange; padding: 0'><strong>Quito</strong></span>, they connect with other migrants — some friends, some strangers, often organized through WeChat, Telegram or Whatsapp.",
+            location: {
+              center: [-78.507751, -0.208946],
+              zoom: 4,
+              pitch: 0,
+              bearing: 0,
+            },
+            mapAnimation: "flyTo",
+            rotateAnimation: false,
+            callback: "",
+            onChapterEnter: [
+              {
+                layer: "flight-path",
+                opacity: 1,
+                duration: 300,
+              },
+            ],
+            onChapterExit: [
+              {
+                layer: "flight-path",
+                opacity: 0,
+                duration: 300,
+              },
+            ],
+          },
 
-    <script src="https://unpkg.com/scrollama"></script>
+          {
+            id: "step-3",
+            alignment: "left",
+            hidden: false,
+            showMarkers: true,
+            description:
+              "From there, they begin the journey north using intercity buses or smuggler-arranged vans, riding for 20 to 30 hours through <strong>Ecuador</strong> to <span style='color: orange; padding: 0'><strong>Necoclí</strong></span>, a coastal town on Colombia’s Caribbean shore.",
+            location: {
+              center: [-76.82428, 8.57533],
+              zoom: 6,
+              pitch: 0,
+              bearing: 0,
+            },
+            mapAnimation: "flyTo",
+            rotateAnimation: false,
+            callback: "",
+            onChapterEnter: [
+              {
+                layer: "land-path-1",
+                opacity: 1,
+                duration: 300,
+              },
+            ],
+            onChapterExit: [
+              {
+                layer: "land-path-1",
+                opacity: 0,
+                duration: 300,
+              },
+            ],
+          },
+
+          {
+            id: "step-4",
+            alignment: "left",
+            hidden: false,
+            showMarkers: true,
+            image: "./assets/boat.jpg",
+            description:
+              "Then they purchase tickets for small boats or speed ferries that carry them to <span style='color: orange; padding: 0'><strong>Acandí</strong></span>, bordering <strong>Panama</strong>.",
+            location: {
+              center: [-77.303, 8.533],
+              zoom: 7,
+              pitch: 0,
+              bearing: 0,
+            },
+            mapAnimation: "flyTo",
+            rotateAnimation: false,
+            callback: "",
+            onChapterEnter: [
+              {
+                layer: "boat-path",
+                opacity: 1,
+                duration: 300,
+              },
+            ],
+            onChapterExit: [
+              {
+                layer: "boat-path",
+                opacity: 0,
+                duration: 300,
+              },
+            ],
+          },
+
+          {
+            id: "step-5",
+            alignment: "left",
+            hidden: false,
+            showMarkers: false,
+            image: "./assets/jungle1.jpg",
+            description:
+              "<p>To enter Panama, they must cross the <span style='background-color: #8B0000; color: white; padding: 0 4px'><strong>Darién Gap</strong></span>—a lawless, roadless expanse of dense rainforest stretching over <strong>100 kilometers</strong>, known as one of the most dangerous migration routes in the world.</p> <p>There were no roads, no signs, no guarantees, only smuggler-guided trails that twist through thick foliage, mudslides, steep ridges, and fast-moving rivers. </p>",
+            location: {
+              center: [-77.303, 8.533],
+              zoom: 7,
+              pitch: 0,
+              bearing: 0,
+            },
+            mapAnimation: "flyTo",
+            rotateAnimation: false,
+            callback: "",
+            onChapterEnter: [
+              {
+                layer: "darien-gap-fill",
+                opacity: 0.2,
+                duration: 300,
+              },
+              {
+                layer: "darien-gap-border",
+                opacity: 1,
+                duration: 300,
+              },
+            ],
+            onChapterExit: [
+              {
+                layer: "darien-gap-fill",
+                opacity: 0,
+                duration: 300,
+              },
+              {
+                layer: "darien-gap-border",
+                opacity: 0,
+                duration: 300,
+              },
+            ],
+          },
+
+          {
+            id: "step-6",
+            alignment: "left",
+            video: "./assets/jungle.mp4",
+            hidden: false,
+            showMarkers: false,
+            description:
+              "Migrants carried whatever they could fit in a backpack and spent days hiking through slick trails, steep cliffs, and flooded ravines. It typically takes <strong>4 to 10 days</strong> to cross, depending on weather, health, and luck. The region was notorious for bandits, smugglers, venomous animals, and deadly dehydration. Some people didn’t make it out.",
+            location: {
+              center: [-77.303, 8.533],
+              zoom: 7,
+              pitch: 0,
+              bearing: 0,
+            },
+            mapAnimation: "flyTo",
+            rotateAnimation: false,
+            callback: "",
+            onChapterEnter: [
+              {
+                layer: "darien-gap-fill",
+                opacity: 0.2,
+                duration: 300,
+              },
+              {
+                layer: "darien-gap-border",
+                opacity: 1,
+                duration: 300,
+              },
+            ],
+            onChapterExit: [
+              {
+                layer: "darien-gap-fill",
+                opacity: 0,
+                duration: 300,
+              },
+              {
+                layer: "darien-gap-border",
+                opacity: 0,
+                duration: 300,
+              },
+            ],
+          },
+
+          {
+            id: "step-7",
+            alignment: "left",
+            video: "./assets/riding horse.mp4",
+            hidden: false,
+            showMarkers: false,
+            description:
+              "There were alternative options, in which guides offered horseback transport for <span style='color: orange; padding: 0'><strong>US$1,600</strong></span> per person, but it was five times the cost of walking.",
+            location: {
+              center: [-77.303, 8.533],
+              zoom: 7,
+              pitch: 0,
+              bearing: 0,
+            },
+            mapAnimation: "flyTo",
+            rotateAnimation: false,
+            callback: "",
+            onChapterEnter: [
+              {
+                layer: "darien-gap-fill",
+                opacity: 0.2,
+                duration: 300,
+              },
+              {
+                layer: "darien-gap-border",
+                opacity: 1,
+                duration: 300,
+              },
+            ],
+            onChapterExit: [
+              {
+                layer: "darien-gap-fill",
+                opacity: 0,
+                duration: 300,
+              },
+              {
+                layer: "darien-gap-border",
+                opacity: 0,
+                duration: 300,
+              },
+            ],
+          },
+
+          {
+            id: "step-8",
+            alignment: "left",
+            hidden: false,
+            image: "./assets/tent.jpg",
+            description:
+              "Those who survived the jungle continued to spend weeks traveling through <strong>Panama, Costa Rica, Nicaragua, Honduras,</strong> and <strong>Guatemala</strong>, before finally entering Mexico.",
+            location: {
+              center: [-92.26432, 14.911071],
+              zoom: 3,
+              pitch: 0,
+              bearing: 0,
+            },
+            mapAnimation: "flyTo",
+            rotateAnimation: false,
+            callback: "",
+            onChapterEnter: [
+              {
+                layer: "central-america-path",
+                opacity: 1,
+                duration: 300,
+              },
+            ],
+            onChapterExit: [
+              {
+                layer: "central-america-path",
+                opacity: 0,
+                duration: 300,
+              },
+            ],
+          },
+
+          {
+            id: "step-9",
+            alignment: "left",
+            hidden: false,
+            description:
+              "In <span style='color: orange; padding: 0'><strong>Tapachula</strong></span>,  the southwest city of Mexico, many are detained by Mexican immigration officials and held in camps or shelters. They apply for temporary transit documents—or are forced to wait weeks or months in limbo.",
+            location: {
+              center: [-92.26432, 14.911071],
+              zoom: 8,
+              pitch: 0,
+              bearing: 0,
+            },
+            mapAnimation: "flyTo",
+            rotateAnimation: false,
+            callback: "",
+            onChapterEnter: [],
+            onChapterExit: [],
+          },
+
+          {
+            id: "step-10",
+            alignment: "left",
+            hidden: false,
+            showMarkers: false,
+            description:
+              "Many migrants who spent weeks trekking toward the northern border were stopped by Mexican immigration officers and deported back south.",
+            location: {
+              center: [-102.552, 22.771],
+              zoom: 4,
+              pitch: 0,
+              bearing: 0,
+            },
+            mapAnimation: "flyTo",
+            rotateAnimation: false,
+            callback: "",
+            onChapterEnter: [
+              {
+                layer: "mexico-path",
+                opacity: 1,
+                duration: 300,
+              },
+            ],
+            onChapterExit: [
+              {
+                layer: "mexico-path",
+                opacity: 0,
+                duration: 300,
+              },
+            ],
+          },
+
+          {
+            id: "step-11",
+            alignment: "left",
+            hidden: false,
+            showMarkers: false,
+            description:
+              "Bribes were often required to avoid detention or to secure passage forward.",
+            location: {
+              center: [-117.046623, 32.522499],
+              zoom: 6,
+              pitch: 0,
+              bearing: 0,
+            },
+            mapAnimation: "flyTo",
+            rotateAnimation: false,
+            callback: "",
+            onChapterEnter: [],
+            onChapterExit: [],
+          },
+
+          {
+            id: "step-12",
+            alignment: "left",
+            hidden: false,
+            showMarkers: false,
+            video: "./assets/wall.MOV",
+            description:
+              "Eventually, after 3 to 6 mounths, they reached <strong>Tijuana</strong>, just <span style='background: repeating-linear-gradient(45deg, #8B0000, #8B0000 5px, #8B3220 5px, #8B3220 10px); color: white; padding: 0 4px'><strong>a wall</strong></span> away from San Diego.",
+            location: {
+              center: [-117.046623, 32.522499],
+              zoom: 11,
+              pitch: 0,
+              bearing: 0,
+            },
+            mapAnimation: "flyTo",
+            rotateAnimation: false,
+            callback: "",
+            onChapterEnter: [
+              {
+                layer: "tijuana-border-line",
+                opacity: 1,
+                duration: 300,
+              },
+            ],
+            onChapterExit: [
+              {
+                layer: "tijuana-border-line",
+                opacity: 0,
+                duration: 300,
+              },
+            ],
+          },
+        ],
+      };
+
+      ////////////////////////
+      var initLoad = true;
+      var layerTypes = {
+        fill: ["fill-opacity"],
+        line: ["line-opacity"],
+        circle: ["circle-opacity", "circle-stroke-opacity"],
+        symbol: ["icon-opacity", "text-opacity"],
+        raster: ["raster-opacity"],
+        "fill-extrusion": ["fill-extrusion-opacity"],
+        heatmap: ["heatmap-opacity"],
+      };
+
+      var alignments = {
+        left: "lefty",
+        center: "centered",
+        right: "righty",
+        full: "fully",
+      };
+
+      function getLayerPaintType(layer) {
+        var layerType = map.getLayer(layer).type;
+        return layerTypes[layerType];
+      }
+
+      function setLayerOpacity(layer) {
+        var paintProps = getLayerPaintType(layer.layer);
+        paintProps.forEach(function (prop) {
+          var options = {};
+          if (layer.duration) {
+            var transitionProp = prop + "-transition";
+            options = {duration: layer.duration};
+            map.setPaintProperty(layer.layer, transitionProp, options);
+          }
+          map.setPaintProperty(layer.layer, prop, layer.opacity, options);
+        });
+      }
+
+      var story = document.getElementById("story");
+      var features = document.createElement("div");
+      features.setAttribute("id", "features");
+
+      var header = document.createElement("div");
+
+      if (config.title) {
+        var titleText = document.createElement("h1");
+        titleText.innerText = config.title;
+        header.appendChild(titleText);
+      }
+
+      if (config.subtitle) {
+        var subtitleText = document.createElement("h2");
+        subtitleText.innerText = config.subtitle;
+        header.appendChild(subtitleText);
+      }
+
+      if (config.byline) {
+        var bylineText = document.createElement("p");
+        bylineText.innerText = config.byline;
+        header.appendChild(bylineText);
+      }
+
+      if (header.innerText.length > 0) {
+        header.classList.add(config.theme);
+        header.setAttribute("id", "header");
+        story.appendChild(header);
+      }
+
+      config.chapters.forEach((record, idx) => {
+        var container = document.createElement("div");
+        var chapter = document.createElement("div");
+
+        if (record.title) {
+          var title = document.createElement("h3");
+          title.innerText = record.title;
+          chapter.appendChild(title);
+        }
+
+        if (record.image) {
+          var image = new Image();
+          image.src = record.image;
+          chapter.appendChild(image);
+        }
+
+        // Add this new block for video support
+        if (record.video) {
+          var video = document.createElement("video");
+          video.src = record.video;
+          video.controls = true;
+          video.muted = true; // muted by default
+          video.autoplay = true; // Autoplay enabled
+          video.loop = true; // Optional: makes the video loop
+          video.style.width = "100%";
+          video.style.marginBottom = "0";
+          video.play(); // Start playing immediately
+          chapter.appendChild(video);
+        }
+
+        if (record.description) {
+          var story = document.createElement("p");
+          story.innerHTML = record.description;
+          chapter.appendChild(story);
+        }
+
+        container.setAttribute("id", record.id);
+        container.classList.add("step");
+        if (idx === 0) {
+          container.classList.add("active");
+        }
+
+        chapter.classList.add(config.theme);
+        container.appendChild(chapter);
+        container.classList.add(alignments[record.alignment] || "centered");
+        if (record.hidden) {
+          container.classList.add("hidden");
+        }
+        features.appendChild(container);
+      });
+
+      story.appendChild(features);
+
+      //   var footer = document.createElement("div");
+
+      //   if (config.footer) {
+      //     var footerText = document.createElement("p");
+      //     footerText.innerHTML = config.footer;
+      //     footer.appendChild(footerText);
+      //   }
+
+      //   if (footer.innerText.length > 0) {
+      //     footer.classList.add(config.theme);
+      //     footer.setAttribute("id", "footer");
+      //     story.appendChild(footer);
+      //   }
+
+      mapboxgl.accessToken = config.accessToken;
+
+      var map = new mapboxgl.Map({
+        container: "map",
+        style: config.style,
+        center: config.chapters[0].location.center,
+        zoom: config.chapters[0].location.zoom,
+        bearing: config.chapters[0].location.bearing,
+        pitch: config.chapters[0].location.pitch,
+        interactive: false,
+        projection: config.projection,
+      });
+
+      // First, declare markers at the global scope (outside any function)
+      var marker, planeMarker, busMarker, boatMarker;
+
+      // Create a inset map if enabled in config.js
+      if (config.inset) {
+        map.addControl(new GlobeMinimap({...config.insetOptions}), config.insetPosition);
+      }
+
+      // Function to create plane marker
+      function createPlaneMarker() {
+        const el = document.createElement("div");
+        el.innerHTML = `<svg width="30" height="30" viewBox="0 0 24 24" fill="${config.markerColor}" style="transform: rotate(97deg)">
+        <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/>
+    </svg>`;
+        return el;
+      }
+
+      function createBusMarker() {
+        const el = document.createElement("div");
+        el.innerHTML = `<svg width="30" height="30" viewBox="0 0 24 24" fill="${config.markerColor}">
+        <path d="M4 16c0 .88.39 1.67 1 2.22V20c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h8v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1.78c.61-.55 1-1.34 1-2.22V6c0-3.5-3.58-4-8-4s-8 .5-8 4v10zm3.5 1c-.83 0-1.5-.67-1.5-1.5S6.67 14 7.5 14s1.5.67 1.5 1.5S8.33 17 7.5 17zm9 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
+    </svg>`;
+        return el;
+      }
+
+      function createBoatMarker() {
+        const el = document.createElement("div");
+        el.innerHTML = `<svg width="30" height="30" viewBox="0 0 24 24" fill="${config.markerColor}">
+        <path d="M20 21c-1.39 0-2.78-.47-4-1.32-2.44 1.71-5.56 1.71-8 0C6.78 20.53 5.39 21 4 21H2v2h2c1.38 0 2.74-.35 4-.99 2.52 1.29 5.48 1.29 8 0 1.26.64 2.63.97 4 .97h2v-2h-2zM3.95 19H4c1.6 0 3.02-.88 4-2 .98 1.12 2.4 2 4 2s3.02-.88 4-2c.98 1.12 2.4 2 4 2h.05l1.89-6.68c.08-.26.06-.54-.06-.78s-.34-.42-.6-.5L20 10.62V6c0-1.1-.9-2-2-2h-3V1H9v3H6c-1.1 0-2 .9-2 2v4.62l-1.29.42c-.26.08-.48.26-.6.5s-.15.52-.06.78L3.95 19z"/>
+    </svg>`;
+        return el;
+      }
+
+      // Initialize markers
+      if (config.showMarkers) {
+        marker = new mapboxgl.Marker({color: config.markerColor});
+        planeMarker = new mapboxgl.Marker({
+          element: createPlaneMarker(),
+          color: config.markerColor,
+        });
+        busMarker = new mapboxgl.Marker({
+          element: createBusMarker(),
+          color: config.markerColor,
+        });
+
+        boatMarker = new mapboxgl.Marker({
+          element: createBoatMarker(),
+          color: config.markerColor,
+        });
+
+        // Set initial marker
+        if (!config.chapters[0].showMarkers === false) {
+          marker.setLngLat(config.chapters[0].location.center).addTo(map);
+        }
+      }
+
+      // instantiate the scrollama
+      var scroller = scrollama();
+
+      map.on("load", function () {
+        if (config.use3dTerrain) {
+          map.addSource("mapbox-dem", {
+            type: "raster-dem",
+            url: "mapbox://mapbox.mapbox-terrain-dem-v1",
+            tileSize: 512,
+            maxzoom: 14,
+          });
+          // add the DEM source as a terrain layer with exaggerated height
+          map.setTerrain({source: "mapbox-dem", exaggeration: 1.5});
+
+          // add a sky layer that will show when the map is highly pitched
+          map.addLayer({
+            id: "sky",
+            type: "sky",
+            paint: {
+              "sky-type": "atmosphere",
+              "sky-atmosphere-sun": [0.0, 0.0],
+              "sky-atmosphere-sun-intensity": 15,
+            },
+          });
+        }
+
+        // setup the instance, pass callback functions
+        scroller
+          .setup({
+            step: ".step",
+            offset: 0.5,
+            progress: true,
+          })
+          .onStepEnter(async (response) => {
+            var current_chapter = config.chapters.findIndex(
+              (chap) => chap.id === response.element.id
+            );
+            let chapter = config.chapters[current_chapter];
+
+            response.element.classList.add("active");
+            map[chapter.mapAnimation || "flyTo"](chapter.location);
+
+            // Clear existing markers
+            if (marker) marker.remove();
+            if (planeMarker) planeMarker.remove();
+            if (busMarker) busMarker.remove();
+            if (boatMarker) boatMarker.remove();
+
+            // Add appropriate marker
+            if (config.showMarkers && chapter.showMarkers !== false) {
+              // Clear all existing markers first
+              if (marker) marker.remove();
+              if (planeMarker) planeMarker.remove();
+              if (busMarker) busMarker.remove();
+
+              console.log("Current chapter:", chapter.id); // Debug log
+              if (chapter.id === "step-2") {
+                console.log("Adding plane marker"); // Debug log
+                planeMarker.setLngLat(chapter.location.center).addTo(map);
+              } else if (chapter.id === "step-3") {
+                console.log("Adding bus marker"); // Debug log
+                busMarker.setLngLat(chapter.location.center).addTo(map);
+              } else if (chapter.id === "step-4") {
+                console.log("Adding boat marker");
+                boatMarker.setLngLat(chapter.location.center).addTo(map);
+              } else {
+                console.log("Adding default marker"); // Debug log
+                marker.setLngLat(chapter.location.center).addTo(map);
+              }
+            }
+
+            if (chapter.onChapterEnter.length > 0) {
+              chapter.onChapterEnter.forEach(setLayerOpacity);
+            }
+            if (chapter.callback) {
+              window[chapter.callback]();
+            }
+            if (chapter.rotateAnimation) {
+              map.once("moveend", () => {
+                const rotateNumber = map.getBearing();
+                map.rotateTo(rotateNumber + 180, {
+                  duration: 30000,
+                  easing: function (t) {
+                    return t;
+                  },
+                });
+              });
+            }
+            if (config.auto) {
+              var next_chapter = (current_chapter + 1) % config.chapters.length;
+              map.once("moveend", () => {
+                document
+                  .querySelectorAll('[data-scrollama-index="' + next_chapter.toString() + '"]')[0]
+                  .scrollIntoView();
+              });
+            }
+          })
+          .onStepExit((response) => {
+            var chapter = config.chapters.find((chap) => chap.id === response.element.id);
+            response.element.classList.remove("active");
+            if (chapter.onChapterExit.length > 0) {
+              chapter.onChapterExit.forEach(setLayerOpacity);
+            }
+          });
+
+        if (config.auto) {
+          document.querySelectorAll('[data-scrollama-index="0"]')[0].scrollIntoView();
+        }
+
+        // Add the flight path layer
+        map.addSource("flight-path", {
+          type: "geojson",
+          data: {
+            type: "FeatureCollection",
+            features: [
+              {
+                type: "Feature",
+                geometry: {
+                  type: "LineString",
+                  coordinates: [
+                    [121.4737, 31.2304], // Shanghai
+                    [179.9, 20], // Near Date Line
+                  ],
+                },
+                properties: {},
+              },
+              {
+                type: "Feature",
+                geometry: {
+                  type: "LineString",
+                  coordinates: [
+                    [-179.9, 20], // Other side of Date Line
+                    [-78.507751, -0.208946], // Quito
+                  ],
+                },
+                properties: {},
+              },
+            ],
+          },
+        });
+
+        map.addLayer({
+          id: "flight-path",
+          type: "line",
+          source: "flight-path",
+          layout: {
+            "line-join": "round",
+            "line-cap": "round",
+          },
+          paint: {
+            "line-color": "#FF9B00",
+            "line-width": 2,
+            "line-opacity": 0,
+            "line-dasharray": [1, 2], // Creates a dashed line effect
+          },
+        });
+
+        // Add a layer from Quito to Necolclí
+        map.addSource("land-path-1", {
+          type: "geojson",
+          data: {
+            type: "Feature",
+            properties: {},
+            geometry: {
+              type: "LineString",
+              coordinates: [
+                [-78.507751, -0.208946], // Quito
+                [-76.5, 4], // Through Colombia
+                [-76.82428, 8.57533],
+              ],
+            },
+          },
+        });
+
+        map.addLayer({
+          id: "land-path-1",
+          type: "line",
+          source: "land-path-1",
+          layout: {
+            "line-join": "round",
+            "line-cap": "round",
+          },
+          paint: {
+            "line-color": "#FF9B00",
+            "line-width": 3,
+            "line-opacity": 0,
+            "line-dasharray": [1, 2],
+          },
+        });
+
+        // Add a layer from Necolclí to Acandí
+        map.addSource("boat-path", {
+          type: "geojson",
+          data: {
+            type: "Feature",
+            properties: {},
+            geometry: {
+              type: "LineString",
+              coordinates: [
+                [-76.82428, 8.57533],
+                [-77.303, 8.533],
+              ],
+            },
+          },
+        });
+
+        map.addLayer({
+          id: "boat-path",
+          type: "line",
+          source: "boat-path",
+          layout: {
+            "line-join": "round",
+            "line-cap": "round",
+          },
+          paint: {
+            "line-color": "#FF9B00",
+            "line-width": 2,
+            "line-opacity": 0,
+            "line-dasharray": [1, 2],
+          },
+        });
+
+        // Add the Central America path layer
+        map.addSource("central-america-path", {
+          type: "geojson",
+          data: {
+            type: "Feature",
+            properties: {},
+            geometry: {
+              type: "LineString",
+              coordinates: [
+                [-77.303, 8.533], // Acandí (Panama border)
+                [-79.516, 8.983], // Panama City
+                [-82.965, 8.929],
+                [-84.091, 9.934],
+                [-86.252, 12.114], // Managua, Nicaragua
+                [-87.192, 14.072], // Tegucigalpa, Honduras
+                [-90.527, 14.623], // Guatemala City
+                [-92.267, 14.911], // Tapachula, Mexico
+              ],
+            },
+          },
+        });
+
+        map.addLayer({
+          id: "central-america-path",
+          type: "line",
+          source: "central-america-path",
+          layout: {
+            "line-join": "round",
+            "line-cap": "round",
+          },
+          paint: {
+            "line-color": "#FF9B00",
+            "line-width": 2,
+            "line-opacity": 0,
+            "line-dasharray": [1, 2],
+          },
+        });
+
+        map.addSource("darien-gap", {
+          type: "geojson",
+          data: {
+            type: "Feature",
+            properties: {},
+            geometry: {
+              type: "Polygon",
+              coordinates: [
+                [
+                  // Rough polygon of Darién Gap area
+                  [-77.8, 8.8], // Northwest corner
+                  [-77.8, 7.2], // Southwest corner
+                  [-76.8, 7.2], // Southeast corner
+                  [-76.8, 8.8], // Northeast corner
+                  [-77.8, 8.8], // Back to start to close polygon
+                ],
+              ],
+            },
+          },
+        });
+
+        map.addLayer({
+          id: "darien-gap-fill",
+          type: "fill",
+          source: "darien-gap",
+          paint: {
+            "fill-color": "#ff0000",
+            "fill-opacity": 0,
+            "fill-outline-color": "#ff0000",
+          },
+        });
+
+        map.addLayer({
+          id: "darien-gap-border",
+          type: "line",
+          source: "darien-gap",
+          paint: {
+            "line-color": "#ff0000",
+            "line-width": 2,
+            "line-opacity": 0,
+          },
+        });
+
+        map.addSource("mexico-path", {
+          type: "geojson",
+          data: {
+            type: "Feature",
+            properties: {},
+            geometry: {
+              type: "LineString",
+              coordinates: [
+                [-92.267, 14.911], // 1. Tapachula
+                [-92.633, 16.737], // 2. Tuxtla Gutiérrez
+                [-96.726, 17.065], // 3. Oaxaca
+                [-98.193, 19.043], // 4. Puebla
+                [-99.133, 19.432], // 5. Mexico City
+                [-100.316, 20.588], // 6. Querétaro
+                [-101.674, 21.152], // 7. Guanajuato
+                [-102.291, 21.879], // 8. Aguascalientes
+                [-103.349, 20.659], // 9. Guadalajara
+                [-104.672, 24.024], // 10. Durango
+                [-106.069, 28.632], // 11. Chihuahua
+                [-116.046, 32.422], // 15. Tijuana
+              ],
+            },
+          },
+        });
+        map.addLayer({
+          id: "mexico-path",
+          type: "line",
+          source: "mexico-path",
+          layout: {
+            "line-join": "round",
+            "line-cap": "round",
+          },
+          paint: {
+            "line-color": "#FF9B00",
+            "line-width": 2,
+            "line-opacity": 0,
+            "line-dasharray": [1, 2],
+          },
+        });
+
+        map.addSource("tijuana-border", {
+          type: "geojson",
+          data: {
+            type: "Feature",
+            properties: {},
+            geometry: {
+              type: "LineString",
+              coordinates: [
+                [-117.12827, 32.53384], // Western point near the Pacific Ocean
+
+                [-116.93092, 32.55], // Eastern point
+              ],
+            },
+          },
+        });
+        map.addLayer({
+          id: "tijuana-border-line",
+          type: "line",
+          source: "tijuana-border",
+          paint: {
+            "line-color": "#8B0000", // Red color for the border
+            "line-width": 10,
+            "line-opacity": 0,
+            "line-dasharray": [1.5, 1], // Optional: makes it a dashed line
+          },
+        });
+      });
+    </script>
+
     <script src="script.js"></script>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/skrollr/0.6.30/skrollr.min.js"></script>
     <script>
       skrollr.init();
+
+      // Function to open the sidebar with a specific story
+      function openSidebar(storyId) {
+        // Default to the first story if no ID is provided
+        storyId = storyId || "hospital";
+
+        // Hide all sidebar overlays first
+        document.querySelectorAll(".sidebar-overlay").forEach((overlay) => {
+          overlay.classList.add("hidden");
+          overlay.classList.remove("show");
+        });
+
+        // Find the specific sidebar for this story
+        var overlay = document.querySelector(`.sidebar-overlay[data-story="${storyId}"]`);
+        if (!overlay) {
+          console.error(`No sidebar found for story: ${storyId}`);
+          return;
+        }
+
+        var sidebar = overlay.querySelector(".sidebar");
+
+        // First remove hidden class
+        overlay.classList.remove("hidden");
+
+        // Force a reflow to ensure the transition works
+        void overlay.offsetWidth;
+
+        // Then add show class to trigger transition
+        setTimeout(() => {
+          overlay.classList.add("show");
+          sidebar.scrollTop = 0;
+          document.body.style.overflow = "hidden";
+        }, 10);
+      }
+
+      // Function to close the sidebar
+      function closeSidebar() {
+        var visibleOverlay = document.querySelector(".sidebar-overlay.show");
+        if (!visibleOverlay) return;
+
+        // First remove show class to trigger transition
+        visibleOverlay.classList.remove("show");
+
+        // Then add hidden class after transition completes
+        setTimeout(() => {
+          visibleOverlay.classList.add("hidden");
+          document.body.style.overflow = "auto";
+        }, 300);
+      }
     </script>
   </body>
 </html>
+                                                                                                                   
